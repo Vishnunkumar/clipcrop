@@ -10,5 +10,5 @@ l_images = clipcrop.extract_image()
 # gives a list of dicitonary of top3 images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
 
-
+- Inspired from @vijishmadhavan [Crop-CLIP](https://github.com/vijishmadhavan/Crop-CLIP)
 
