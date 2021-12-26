@@ -12,14 +12,15 @@ lm = clipcrop.extract_image()
 
 ## Result
 
-<p>clipcrop = ClipCrop("/content/nm.jpg", "woman in white frock")</p>
+<p style="font-style: italic;">clipcrop = ClipCrop("/content/nm.jpg", "woman in white frock")</p>
 <p float="left">
 <img src="/nm.jpg" width="600" height="350">
 <img src="/clipcrop.jpeg" width="150" height="300">
 </p>
 
+<br>
 
-<p>cc = ClipCrop('/content/rd.jpg', 'woman walking', 2)</p>
+<p style="font-style: italic;">cc = ClipCrop('/content/rd.jpg', 'woman walking', 2)</p>
 <p float="left">
 <img src="/rd.jpg" width="600" height="350">
 <img src="/rmc.jpeg" width="150" height="300">
