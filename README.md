@@ -1,6 +1,14 @@
 # clipcrop
 Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers
 
+# Detr
+
+Facebook's Detr is one of most effective object detection algorithm developed in the recent years. It simply expands to Detection Transformers and effectively a CNN architecture followed by Transformers encoders and decoders 
+It uses biopartite matching loss to compare objects detected in an image and optimizes its efficiency further. Below are reason why you should prefer Detr over some popular algorithms
+
+- It's single step detector and it's efficiency is on par and better than two stage detectors like RCNN and Fast RCNN.
+- Compared to Yolo and SSD which are one stage detector DeTr performs detection on the whole image rather than grids of images unlike what we see in Yolo.
+
 ## Implementation
 
 ```python
