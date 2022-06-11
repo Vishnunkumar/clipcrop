@@ -1,7 +1,8 @@
 import numpy as np
 from PIL import Image
-from transformers import CLIPProcessor, CLIPModel, DetrFeatureExtractor, DetrForObjectDetection
+from transformers import CLIPProcessor, CLIPModel, DetrFeatureExtractor, DetrForObjectDetection, pipeline
 import torch
+import cv2
 
 feature_extractor = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
 dmodel = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
@@ -68,3 +69,51 @@ class ClipCrop():
 
     fi = sorted(final_ims, key=lambda item: item.get("score"), reverse=True)
     return fi
+
+
+class ClipSeg:
+  def __init__(self, input_path, input_text):
+    
+    self.input_path = input_path
+    self.input_text = input_text
+
+  def load_models(self):
+    
+    segmentor = pipeline("image-segmentation")
+    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32") 
+
+    return segmentor, model, processor
+
+  def unmask(self, img, segim):
+
+    self.img = img
+    self.segim = segim
+
+    mask = cv2.bitwise_not(np.array(self.segim))
+    imask = cv2.bitwise_and(np.array(self.img), np.array(self.img), mask = np.array(self.segim)) 
+    pil_mask = Image.fromarray(imask)
+
+    return pil_mask
+  
+  def segment_image(self, segmentor, model, processor):
+    
+    self.segmentor = segmentor 
+    self.model = model 
+    self.processor = processor
+
+    print("Extracting Segments")
+    segments = self.segmentor(self.input_path)
+    img = Image.open(self.input_path)
+    images_list = [self.unmask(img, x['mask']) for x in segments]
+    scores = [x['score'] for x in segments]
+
+    print("Processing using CLIP to derive the most probable")
+    inputs = processor(text = [self.input_text], images=images_list , return_tensors="pt", padding=True)
+    outputs = model(**inputs)
+    logits_per_image = outputs.logits_per_text
+    probs = logits_per_image.softmax(-1).detach().numpy()
+    most_prob = np.argmax(probs)
+
+    print("Results saved to variables")
+    return images_list[most_prob], scores[most_prob], self.input_text
