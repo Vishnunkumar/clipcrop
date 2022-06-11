@@ -71,7 +71,7 @@ class ClipCrop():
     return fi
 
 
-class ClipSeg:
+class ClipSeg():
   def __init__(self, input_path, input_text):
     
     self.input_path = input_path
