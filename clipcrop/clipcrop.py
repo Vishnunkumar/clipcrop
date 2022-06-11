@@ -4,12 +4,6 @@ from transformers import CLIPProcessor, CLIPModel, DetrFeatureExtractor, DetrFor
 import torch
 import cv2
 
-feature_extractor = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
-dmodel = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
-
-model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-
 class ClipCrop():
 
   def __init__(self, image_path, text, num=3):
@@ -51,6 +45,9 @@ class ClipCrop():
       roi_im = Image.fromarray(roi)
 
       images_list.append(roi_im)
+
+    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
     inputs = processor(text = [self.text], images=images_list , return_tensors="pt", padding=True)
     outputs = model(**inputs)
