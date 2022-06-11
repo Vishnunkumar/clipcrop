@@ -53,5 +53,7 @@ segmentor, clipmodel, clipprocessor = clipseg.load_models()
 ## gives the most probable segment and its matching score.
 image, score, text = clips.segment_image(segmentor, clipmodel, clipprocessor)
 
+```
+
 - Inspired from [@vijishmadhavan](https://github.com/vijishmadhavan/Crop-CLIP/)
 
