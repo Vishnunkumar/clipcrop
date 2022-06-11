@@ -1,5 +1,6 @@
 # clipcrop
-Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers
+- Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers
+- Added new capability for segmentation using CLIP and Detr segmentation models
 
 # Why Detr?
 
@@ -8,16 +9,21 @@ Facebook's Detr is one of most effective object detection algorithm developed in
 - It's single step detector and it's efficiency is on par and better than two stage detectors like RCNN and Fast RCNN.
 - Compared to Yolo and SSD which are one stage detector DeTr performs detection on the whole image rather than grids of images unlike what we see in Yolo.
 
-## Implementation
+## Clip Crop
+
+Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers
+
+### Implementation
 
 ```python
-clipcrop = ClipCrop("/content/nm.jpg", "woman in white frock")
-lm = clipcrop.extract_image()
+from clipcrop import clipcrop
+clipc = clipcrop.ClipCrop("/content/nm.jpg", "woman in white frock")
+lm = clipc.extract_image()
 
 # gives a list of dicitonary of top3 images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
 
-## Result
+### Result
 
 <p style="font-style: italic;">clipcrop = ClipCrop("/content/nm.jpg", "woman in white frock")</p>
 <p float="left">
@@ -32,6 +38,20 @@ lm = clipcrop.extract_image()
 <img src="/rd.jpg" width="600" height="350">
 <img src="/rmc.jpeg" width="150" height="300">
 </p>
+
+## Clip Segmentation
+
+Segment out images using Detr Panoptic segmentation pipeline and leverage CLIP models to derive at the most probable one for your query
+
+### Implementation
+
+```python
+from clipcrop import clipcrop
+clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
+segmentor, clipmodel, clipprocessor = clipseg.load_models()
+
+## gives the most probable segment and its matching score.
+image, score, text = clips.segment_image(segmentor, clipmodel, clipprocessor)
 
 - Inspired from [@vijishmadhavan](https://github.com/vijishmadhavan/Crop-CLIP/)
 
