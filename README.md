@@ -16,7 +16,7 @@ pip install clipcrop
 
 ## Clip Crop
 
-Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers
+Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers (Inspired from [@vijishmadhavan](https://github.com/vijishmadhavan/Crop-CLIP/))
 
 ### Implementation
 
@@ -59,6 +59,4 @@ segmentor, clipmodel, clipprocessor = clipseg.load_models()
 image, score, text = clips.segment_image(segmentor, clipmodel, clipprocessor)
 
 ```
-
-- Inspired from [@vijishmadhavan](https://github.com/vijishmadhavan/Crop-CLIP/)
 
