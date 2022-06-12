@@ -9,6 +9,11 @@ Facebook's Detr is one of most effective object detection algorithm developed in
 - It's single step detector and it's efficiency is on par and better than two stage detectors like RCNN and Fast RCNN.
 - Compared to Yolo and SSD which are one stage detector DeTr performs detection on the whole image rather than grids of images unlike what we see in Yolo.
 
+# Installation
+```python
+pip install clipcrop
+```
+
 ## Clip Crop
 
 Extract sections of images from your image by using OpenAI's CLIP and Facebooks Detr implemented on HuggingFace Transformers
