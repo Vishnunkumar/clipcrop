@@ -14,12 +14,12 @@ class ClipCrop():
   
   def load_models(self):
 
-    feature_extractor = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
-    dmodel = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
-    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+    DFE = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
+    DM = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
+    CLIPM = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    CLIPP = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-    return feature_extractor, dmodel, model, processor
+    return DFE, DM, CLIPM, CLIPP
 
   def extract_image(self, DFE, DM, CLIPM, CLIPP):
 
