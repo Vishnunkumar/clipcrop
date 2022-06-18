@@ -11,15 +11,27 @@ class ClipCrop():
     self.image_path = image_path
     self.text = text
     self.num = num
+  
+  def load_models(self):
 
-  def extract_image(self):
-
-    image = Image.open(self.image_path)
     feature_extractor = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
     dmodel = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
+    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-    inputs = feature_extractor(images=image, return_tensors="pt")
-    outputs = dmodel(**inputs)
+    return feature_extractor, dmodel, model, processor
+
+  def extract_image(self, DFE, DM, CLIPM, CLIPP):
+
+    self.DFE = DFE
+    self.DM = DM
+    self.CLIPM = CLIPM
+    self.CLIPP = CLIPP
+
+    image = Image.open(self.image_path)
+
+    inputs = self.DFE(images=image, return_tensors="pt")
+    outputs = self.DM(**inputs)
 
     # model predicts bounding boxes and corresponding COCO classes
     logits = outputs.logits
@@ -46,11 +58,8 @@ class ClipCrop():
 
       images_list.append(roi_im)
 
-    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-
-    inputs = processor(text = [self.text], images=images_list , return_tensors="pt", padding=True)
-    outputs = model(**inputs)
+    inputs = self.CLIPP(text = [self.text], images=images_list , return_tensors="pt", padding=True)
+    outputs = self.CLIPM(**inputs)
     logits_per_image = outputs.logits_per_text
     probs = logits_per_image.softmax(-1)
     l_idx = np.argsort(probs[-1].detach().numpy())[::-1][0:self.num]
@@ -93,24 +102,33 @@ class ClipSeg():
 
     return pil_mask
   
-  def segment_image(self, segmentor, model, processor):
+  def segment_image(self, segmentor, model, processor, num=None):
     
     self.segmentor = segmentor 
     self.model = model 
     self.processor = processor
+    self.num = num
 
-    print("Extracting Segments")
     segments = self.segmentor(self.input_path)
     img = Image.open(self.input_path)
     images_list = [self.unmask(img, x['mask']) for x in segments]
     scores = [x['score'] for x in segments]
-
-    print("Processing using CLIP to derive the most probable")
-    inputs = processor(text = [self.input_text], images=images_list , return_tensors="pt", padding=True)
-    outputs = model(**inputs)
+    inputs = self.processor(text = [self.input_text], images=images_list , return_tensors="pt", padding=True)
+    outputs = self.model(**inputs)
     logits_per_image = outputs.logits_per_text
     probs = logits_per_image.softmax(-1).detach().numpy()
-    most_prob = np.argmax(probs)
+    res_list = np.argsort(probs[0])[::-1]
 
-    print("Results saved to variables")
-    return images_list[most_prob], scores[most_prob], self.input_text
+    if self.num is None:
+      self.num = 1
+
+    seg_list = []
+    for x in res_list[:self.num]:
+      seg_dict = {}
+      seg_dict["image"] = images_list[x]
+      seg_dict["score"] = scores[x]
+      seg_list.append(seg_dict)
+
+    return seg_list
+
+    
