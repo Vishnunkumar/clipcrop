@@ -54,8 +54,6 @@ Segment out images using Detr Panoptic segmentation pipeline and leverage CLIP m
 from clipcrop import clipcrop
 clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
 segmentor, clipmodel, clipprocessor = clipseg.load_models()
-
-## gives the most probable segment and its matching score.
 result = clips.segment_image(segmentor, clipmodel, clipprocessor)
 # gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
