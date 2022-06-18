@@ -25,7 +25,7 @@ from clipcrop import clipcrop
 clipc = clipcrop.ClipCrop("/content/nm.jpg", "woman in white frock")
 DFE, DM, CLIPM, CLIPP = clipc.load_models()
 result = clipc.extract_image(DFE, DM, CLIPM, CLIPP)
-# gives a list of dicitonary of top3 images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
+# gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
 <!-- 
 ### Result
@@ -56,7 +56,7 @@ clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
 segmentor, clipmodel, clipprocessor = clipseg.load_models()
 
 ## gives the most probable segment and its matching score.
-image, score, text = clips.segment_image(segmentor, clipmodel, clipprocessor)
-
+result = clips.segment_image(segmentor, clipmodel, clipprocessor)
+# gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
 
