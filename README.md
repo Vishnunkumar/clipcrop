@@ -25,7 +25,7 @@ from clipcrop import clipcrop
 clipc = clipcrop.ClipCrop("/content/nm.jpg", "woman in white frock")
 DFE, DM, CLIPM, CLIPP = clipc.load_models()
 result = clipc.extract_image(DFE, DM, CLIPM, CLIPP)
-# gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
+# gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc while initiating the class
 ```
 <!-- 
 ### Result
