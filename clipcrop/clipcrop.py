@@ -101,7 +101,19 @@ class ClipSeg():
     pil_mask = Image.fromarray(imask)
 
     return pil_mask
-  
+
+  # def bwimage(self, img, segim):
+    
+  #   self.img = img
+  #   self.segim = segim
+
+  #   gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+  #   imask = cv2.bitwise_and(np.array(gray), np.array(gray), mask = np.array(self.segim))
+  #   pil_mask = Image.fromarray(imask)
+
+  #   return pil_mask
+
+
   def segment_image(self, segmentor, model, processor, num=None):
     
     self.segmentor = segmentor 
@@ -131,4 +143,29 @@ class ClipSeg():
 
     return seg_list
 
-    
+  # def seeyou(self, segmentor, model, processor):
+
+  #   self.segmentor = segmentor 
+  #   self.model = model 
+  #   self.processor = processor
+
+  #   segments = self.segmentor(self.input_path)
+  #   img = Image.open(self.input_path)
+  #   images_list = [self.unmask(img, x['mask']) for x in segments]
+  #   scores = [x['score'] for x in segments]
+  #   inputs = self.processor(text = ["person"], images=images_list , return_tensors="pt", padding=True)
+  #   outputs = self.model(**inputs)
+  #   logits_per_image = outputs.logits_per_text
+  #   probs = logits_per_image.softmax(-1).detach().numpy()
+  #   res_list = np.argsort(probs[0])[::-1]
+
+  #   if self.num is None:
+  #     self.num = 1
+
+  #   seg_list = []
+  #   for x in res_list[:self.num]:
+  #     seg_dict = {}
+  #     seg_dict["image"] = images_list[x]
+  #     seg_dict["score"] = scores[x]
+  #     seg_list.append(seg_dict)
+
