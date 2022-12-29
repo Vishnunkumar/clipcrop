@@ -148,7 +148,7 @@ class ClipSeg():
     res = np.dstack((res_cv, alpha))
     respl = Image.fromarray(res)
     
-    return respl, seglist['score']
+    return respl, seglist[0]['score']
 
   # def seeyou(self, segmentor, model, processor):
 
