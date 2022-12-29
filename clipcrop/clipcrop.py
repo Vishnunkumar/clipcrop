@@ -134,21 +134,21 @@ class ClipSeg():
     if self.num is None:
       self.num = 1
 
-    seg_list = []
+    seglist = []
     for x in res_list[:self.num]:
       seg_dict = {}
       seg_dict["image"] = images_list[x]
       seg_dict["score"] = scores[x]
-      seg_list.append(seg_dict)
+      seglist.append(seg_dict)
     
-    res_im = seg_list[0]['image']
+    res_im = seglist[0]['image']
     res_cv = np.array(res_im)
     alpha = np.sum(res_cv, axis=-1) > 0
     alpha = np.uint8(alpha * 255)
     res = np.dstack((res_cv, alpha))
     respl = Image.fromarray(res)
     
-    return respl, seg_list['score']
+    return respl, seglist['score']
 
   # def seeyou(self, segmentor, model, processor):
 
