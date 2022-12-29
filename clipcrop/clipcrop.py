@@ -141,7 +141,7 @@ class ClipSeg():
       seg_dict["score"] = scores[x]
       seg_list.append(seg_dict)
     
-    res_im = seglist[0]['image']
+    res_im = seg_list[0]['image']
     res_cv = np.array(res_im)
     alpha = np.sum(res_cv, axis=-1) > 0
     alpha = np.uint8(alpha * 255)
