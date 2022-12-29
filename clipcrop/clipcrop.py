@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel, DetrFeatureExtractor, DetrForObjectDetection, pipeline
-import torch
+import torch 
 import cv2
 
 class ClipCrop():
@@ -140,8 +140,15 @@ class ClipSeg():
       seg_dict["image"] = images_list[x]
       seg_dict["score"] = scores[x]
       seg_list.append(seg_dict)
-
-    return seg_list
+    
+    res_im = seglist[0]['image']
+    res_cv = np.array(res_im)
+    alpha = np.sum(res_cv, axis=-1) > 0
+    alpha = np.uint8(alpha * 255)
+    res = np.dstack((res_cv, alpha))
+    respl = Image.fromarray(res)
+    
+    return respl, seg_list['score']
 
   # def seeyou(self, segmentor, model, processor):
 
