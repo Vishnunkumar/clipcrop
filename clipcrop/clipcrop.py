@@ -134,46 +134,19 @@ class ClipSeg():
     if self.num is None:
       self.num = 1
 
-    seglist = []
+    seg_list = []
     for x in res_list[:self.num]:
       seg_dict = {}
       seg_dict["image"] = images_list[x]
       seg_dict["score"] = scores[x]
-      seglist.append(seg_dict)
+      seg_list.append(seg_dict)
     
-    print(seglist)
-    res_im = seglist[0]['image']
+    print(seg_list)
+    res_im = seg_list[0]['image']
     res_cv = np.array(res_im)
     alpha = np.sum(res_cv, axis=-1) > 0
     alpha = np.uint8(alpha * 255)
     res = np.dstack((res_cv, alpha))
     respl = Image.fromarray(res)
     
-    return respl, seglist[0]['score']
-
-  # def seeyou(self, segmentor, model, processor):
-
-  #   self.segmentor = segmentor 
-  #   self.model = model 
-  #   self.processor = processor
-
-  #   segments = self.segmentor(self.input_path)
-  #   img = Image.open(self.input_path)
-  #   images_list = [self.unmask(img, x['mask']) for x in segments]
-  #   scores = [x['score'] for x in segments]
-  #   inputs = self.processor(text = ["person"], images=images_list , return_tensors="pt", padding=True)
-  #   outputs = self.model(**inputs)
-  #   logits_per_image = outputs.logits_per_text
-  #   probs = logits_per_image.softmax(-1).detach().numpy()
-  #   res_list = np.argsort(probs[0])[::-1]
-
-  #   if self.num is None:
-  #     self.num = 1
-
-  #   seg_list = []
-  #   for x in res_list[:self.num]:
-  #     seg_dict = {}
-  #     seg_dict["image"] = images_list[x]
-  #     seg_dict["score"] = scores[x]
-  #     seg_list.append(seg_dict)
-
+    return respl, seg_list[0]['score']
