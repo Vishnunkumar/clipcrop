@@ -102,18 +102,6 @@ class ClipSeg():
 
     return pil_mask
 
-  # def bwimage(self, img, segim):
-    
-  #   self.img = img
-  #   self.segim = segim
-
-  #   gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-  #   imask = cv2.bitwise_and(np.array(gray), np.array(gray), mask = np.array(self.segim))
-  #   pil_mask = Image.fromarray(imask)
-
-  #   return pil_mask
-
-
   def segment_image(self, segmentor, model, processor, num=None):
     
     self.segmentor = segmentor 
@@ -137,16 +125,14 @@ class ClipSeg():
     seg_list = []
     for x in res_list[:self.num]:
       seg_dict = {}
-      seg_dict["image"] = images_list[x]
+      res_im = images_list[x]
+      res_cv = np.array(res_im)
+      nz = np.sum(res_cv, axis=-1) > 0
+      nz = np.uint8(nz * 255)
+      res = np.dstack((res_cv, nz))
+      respl = Image.fromarray(res)  
+      seg_dict["image"] = respl
       seg_dict["score"] = scores[x]
       seg_list.append(seg_dict)
     
-    print(seg_list)
-    res_im = seg_list[0]['image']
-    res_cv = np.array(res_im)
-    alpha = np.sum(res_cv, axis=-1) > 0
-    alpha = np.uint8(alpha * 255)
-    res = np.dstack((res_cv, alpha))
-    respl = Image.fromarray(res)
-    
-    return respl, seg_list[0]['score']
+    return seg_list
