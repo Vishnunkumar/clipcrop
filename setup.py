@@ -57,7 +57,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url = 'https://github.com/Vishnunkumar/clipcrop/',
     packages=[
-        'pyfacy',
+        'clipcrop',
     ],
     package_dir={'clipcrop': 'clipcrop'},
     package_data={
