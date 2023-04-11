@@ -21,9 +21,13 @@ class ClipCrop():
 
     return DFE, DM, CLIPM, CLIPP
 
-  def captcha(self, DFE, DM, CLIPM, CLIPP, th=0.9):
+  def captcha(self, DFE, DM, CLIPM, CLIPP, th=0.95):
     
     self.th = th
+    self.DFE = DFE
+    self.DM = DM
+    self.CLIPM = CLIPM
+    self.CLIPP = CLIPP
 
     image = Image.open(self.image_path)
     inputs = self.DFE(images=image, return_tensors="pt")
@@ -50,7 +54,7 @@ class ClipCrop():
       im_arr = np.array(image)
       cv2.rectangle(im_arr, (xmin, ymin), (xmax, ymax), (255,0,0), 2)
 
-      return Image.fromarray(im_arr)
+    return Image.fromarray(im_arr)
 
 
   def extract_image(self, DFE, DM, CLIPM, CLIPP):
