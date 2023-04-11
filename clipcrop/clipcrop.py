@@ -21,6 +21,38 @@ class ClipCrop():
 
     return DFE, DM, CLIPM, CLIPP
 
+  def captcha(self, DFE, DM, CLIPM, CLIPP, th=0.9):
+    
+    self.th = th
+
+    image = Image.open(self.image_path)
+    inputs = self.DFE(images=image, return_tensors="pt")
+    outputs = self.DM(**inputs)
+
+    # model predicts bounding boxes and corresponding COCO classes
+    logits = outputs.logits
+    bboxes = outputs.pred_boxes
+    probas = outputs.logits.softmax(-1)[0, :, :-1] #removing no class as detr maps 
+
+    keep = probas.max(-1).values > self.th
+    outs = self.DFE.post_process(outputs, torch.tensor(image.size[::-1]).unsqueeze(0))
+    bboxes_scaled = outs[0]['boxes'][keep].detach().numpy()
+    labels = outs[0]['labels'][keep].detach().numpy()
+    scores = outs[0]['scores'][keep].detach().numpy()
+
+    for i,j in enumerate(bboxes_scaled):
+      
+      xmin = int(j[0])
+      ymin = int(j[1])
+      xmax = int(j[2])
+      ymax = int(j[3])
+      
+      im_arr = np.array(image)
+      cv2.rectangle(im_arr, (xmin, ymin), (xmax, ymax), (255,0,0), 2)
+
+      return Image.fromarray(im_arr)
+
+
   def extract_image(self, DFE, DM, CLIPM, CLIPP):
 
     self.DFE = DFE
