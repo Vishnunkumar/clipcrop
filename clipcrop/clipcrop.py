@@ -63,8 +63,8 @@ class ClipCrop():
     self.CLIPM = CLIPM
     self.CLIPP = CLIPP
 
-    image = cv2.imread(self.image_path)
-    inputs = self.DFE(images=image, return_tensors="pt")
+    img = cv2.imread(self.image_path)
+    inputs = self.DFE(images=img, return_tensors="pt")
     outputs = self.DM(**inputs)
 
     # model predicts bounding boxes and corresponding COCO classes
@@ -73,8 +73,8 @@ class ClipCrop():
     probas = outputs.logits.softmax(-1)[0, :, :-1] #removing no class as detr maps 
 
     keep = probas.max(-1).values > 0.95
-    print(image.shape)
-    outs = self.DFE.post_process(outputs, torch.tensor(image.shape[:2]).unsqueeze(0))
+    print(img)
+    outs = self.DFE.post_process(outputs, torch.tensor(img.shape[:2]).unsqueeze(0))
     bboxes_scaled = outs[0]['boxes'][keep].detach().numpy()
     labels = outs[0]['labels'][keep].detach().numpy()
     scores = outs[0]['scores'][keep].detach().numpy()
