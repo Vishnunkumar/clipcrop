@@ -29,7 +29,7 @@ class ClipCrop():
     self.CLIPM = CLIPM
     self.CLIPP = CLIPP
 
-    image = Image.open(self.image_path)
+    image = cv2.imread(self.image_path)
     inputs = self.DFE(images=image, return_tensors="pt")
     outputs = self.DM(**inputs)
 
@@ -51,8 +51,7 @@ class ClipCrop():
       xmax = int(j[2])
       ymax = int(j[3])
       
-      im_arr = np.array(image)
-      cv2.rectangle(im_arr, (xmin, ymin), (xmax, ymax), (255,0,0), 2)
+      cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (255,0,0), 2)
 
     return Image.fromarray(im_arr)
 
@@ -64,8 +63,7 @@ class ClipCrop():
     self.CLIPM = CLIPM
     self.CLIPP = CLIPP
 
-    image = Image.open(self.image_path)
-
+    image = cv2.imread(self.image_path)
     inputs = self.DFE(images=image, return_tensors="pt")
     outputs = self.DM(**inputs)
 
@@ -88,10 +86,8 @@ class ClipCrop():
       xmax = int(j[2])
       ymax = int(j[3])
 
-      im_arr = np.array(image)
-      roi = im_arr[ymin:ymax, xmin:xmax]
+      roi = image[ymin:ymax, xmin:xmax]
       roi_im = Image.fromarray(roi)
-
       images_list.append(roi_im)
 
     inputs = self.CLIPP(text = [self.text], images=images_list , return_tensors="pt", padding=True)
