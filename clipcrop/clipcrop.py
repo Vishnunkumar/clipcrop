@@ -43,7 +43,9 @@ class ClipCrop():
     bboxes_scaled = outs[0]['boxes'][keep].detach().numpy()
     labels = outs[0]['labels'][keep].detach().numpy()
     scores = outs[0]['scores'][keep].detach().numpy()
+    num = len(bboxes_scaled)
 
+    images_list = []
     for i,j in enumerate(bboxes_scaled):
       
       xmin = int(j[0])
@@ -51,10 +53,22 @@ class ClipCrop():
       xmax = int(j[2])
       ymax = int(j[3])
       
-      cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (255,0,0), 2)
+      roi = image[ymin:ymax, xmin:xmax]
+      roi_im = Image.fromarray(roi)
+      images_list.append(roi_im)
 
-    return Image.fromarray(im_arr)
+    inps = self.CLIPP(text = [self.text], images=images_list , return_tensors="pt", padding=True)
+    outs = self.CLIPM(**inps)
+    logits_per_image = outs.logits_per_text
+    probs = logits_per_image.softmax(-1)
+    l_idx = np.argsort(probs[-1].detach().numpy())[::-1][0:num]
 
+    for i, j in enumerate(images_list):
+      if i in l_idx:
+        cv2.rectangle(image, (bboxes_scaled[i][0], bboxes_scaled[i][1]), (bboxes_scaled[i][2], bboxes_scaled[i][3]), 
+        (255,0,0), 4)
+
+    return Image.fromarray(image)
 
   def extract_image(self, DFE, DM, CLIPM, CLIPP):
 
