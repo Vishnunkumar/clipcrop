@@ -44,6 +44,22 @@ result = clipc.extract_image(DFE, DM, CLIPM, CLIPP)
 <img src="/rmc.jpeg" width="150" height="300">
 </p> -->
 
+### Captcha
+Solve captacha images using CLIP and Object detection models.
+
+```python
+from clipcrop import clipcrop
+
+# second arguement is the text prompt eg:image of cars
+clipc = clipcrop.ClipCrop(image_path, "image of cars")
+
+#loading models, processors, feature extractors
+DFE, DM, CLIPM, CLIPP = clipc.load_models()
+
+#generally keep high threshold to avoid noises
+result = clipc.captcha(DFE, DM, CLIPM, CLIPP, th=0.99)
+```
+
 ## Clip Segmentation
 
 Segment out images using Detr Panoptic segmentation pipeline and leverage CLIP models to derive at the most probable one for your query
