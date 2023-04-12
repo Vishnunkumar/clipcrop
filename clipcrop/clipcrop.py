@@ -103,8 +103,8 @@ class ClipCrop():
       ymax = int(j[3])
 
       roi = image[ymin:ymax, xmin:xmax]
-      roi_im = Image.fromarray(roi)
-      images_list.append(roi_im[:,:,::-1])
+      roi_im = Image.fromarray(roi[:,:,::-1])
+      images_list.append(roi_im)
 
     inputs = self.CLIPP(text = [self.text], images=images_list , return_tensors="pt", padding=True)
     outputs = self.CLIPM(**inputs)
