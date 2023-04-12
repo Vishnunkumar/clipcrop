@@ -6,11 +6,11 @@ import cv2
 
 class ClipCrop():
 
-  def __init__(self, image_path, text, num=3):
+  def __init__(self, image_path, text):
 
     self.image_path = image_path
     self.text = text
-    self.num = num
+    
   
   def load_models(self):
 
@@ -43,7 +43,7 @@ class ClipCrop():
     bboxes_scaled = outs[0]['boxes'][keep].detach().numpy()
     labels = outs[0]['labels'][keep].detach().numpy()
     scores = outs[0]['scores'][keep].detach().numpy()
-    num = len(bboxes_scaled)
+    num = 5
 
     images_list = []
     for i,j in enumerate(bboxes_scaled):
@@ -69,15 +69,16 @@ class ClipCrop():
         (int(bboxes_scaled[i][2]), int(bboxes_scaled[i][3])), 
         (255,0,0), 4)
 
-    return Image.fromarray(image)
+    return Image.fromarray(image[:,:,::-1])
 
-  def extract_image(self, DFE, DM, CLIPM, CLIPP):
+  def extract_image(self, DFE, DM, CLIPM, CLIPP, num=3):
 
     self.DFE = DFE
     self.DM = DM
     self.CLIPM = CLIPM
     self.CLIPP = CLIPP
-
+    self.num = num
+    
     image = cv2.imread(self.image_path)
     inputs = self.DFE(images=image, return_tensors="pt")
     outputs = self.DM(**inputs)
@@ -103,7 +104,7 @@ class ClipCrop():
 
       roi = image[ymin:ymax, xmin:xmax]
       roi_im = Image.fromarray(roi)
-      images_list.append(roi_im)
+      images_list.append(roi_im[:,:,::-1])
 
     inputs = self.CLIPP(text = [self.text], images=images_list , return_tensors="pt", padding=True)
     outputs = self.CLIPM(**inputs)
