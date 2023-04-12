@@ -65,7 +65,8 @@ class ClipCrop():
 
     for i, j in enumerate(images_list):
       if i in l_idx:
-        cv2.rectangle(image, (bboxes_scaled[i][0], bboxes_scaled[i][1]), (bboxes_scaled[i][2], bboxes_scaled[i][3]), 
+        cv2.rectangle(image, (int(bboxes_scaled[i][0]), int(bboxes_scaled[i][1])), 
+        (int(bboxes_scaled[i][2]), int(bboxes_scaled[i][3])), 
         (255,0,0), 4)
 
     return Image.fromarray(image)
