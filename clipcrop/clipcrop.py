@@ -21,53 +21,46 @@ class ClipCrop():
 
     return DFE, DM, CLIPM, CLIPP
 
-  def captcha(self, DFE, DM, CLIPM, CLIPP, th=0.95):
+  def captcha(self, CLIPM, CLIPP, th=3):
     
     self.th = th
-    self.DFE = DFE
-    self.DM = DM
     self.CLIPM = CLIPM
     self.CLIPP = CLIPP
 
     image = cv2.imread(self.image_path)
-    inputs = self.DFE(images=image, return_tensors="pt")
-    outputs = self.DM(**inputs)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blur = cv2.medianBlur(gray, 3)
+    sharpen_kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+    sharpen = cv2.filter2D(blur, -1, sharpen_kernel)
 
-    # model predicts bounding boxes and corresponding COCO classes
-    logits = outputs.logits
-    bboxes = outputs.pred_boxes
-    probas = outputs.logits.softmax(-1)[0, :, :-1] #removing no class as detr maps 
+    # Threshold and morph close
+    thresh = cv2.threshold(sharpen, 160, 255, cv2.THRESH_BINARY_INV)[1]
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,1))
+    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
 
-    keep = probas.max(-1).values > self.th
-    outs = self.DFE.post_process(outputs, torch.tensor(image.shape[:2]).unsqueeze(0))
-    bboxes_scaled = outs[0]['boxes'][keep].detach().numpy()
-    labels = outs[0]['labels'][keep].detach().numpy()
-    scores = outs[0]['scores'][keep].detach().numpy()
-    num = 5
+    # Find contours and filter using threshold area
+    cnts = cv2.findContours(close, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
-    images_list = []
-    for i,j in enumerate(bboxes_scaled):
-      
-      xmin = int(j[0])
-      ymin = int(j[1])
-      xmax = int(j[2])
-      ymax = int(j[3])
-      
-      roi = image[ymin:ymax, xmin:xmax]
-      roi_im = Image.fromarray(roi)
-      images_list.append(roi_im)
+    image_number = 0
+    img_list = []
+    r_list = []
+    for c in cnts:    
+        x,y,w,h = cv2.boundingRect(c)
+        if w/h == 1 and (w, h) > (5, 5):
+            ROI = image[y:y+h, x:x+w]
+            img_list.append(Image.fromarray(ROI[:,:,::-1]))
+            r_list.append([(x, y), (x + w, y + h)])
+            image_number += 1
 
-    inps = self.CLIPP(text = [self.text], images=images_list , return_tensors="pt", padding=True)
+    inps = self.CLIPP(text = [self.text], images=img_list , return_tensors="pt", padding=True)
     outs = self.CLIPM(**inps)
     logits_per_image = outs.logits_per_text
     probs = logits_per_image.softmax(-1)
-    l_idx = np.argsort(probs[-1].detach().numpy())[::-1][0:num]
+    l_idx = list(np.argsort(probs[-1].detach().numpy())[::-1][0:self.th])
 
-    for i, j in enumerate(images_list):
-      if i in l_idx:
-        cv2.rectangle(image, (int(bboxes_scaled[i][0]), int(bboxes_scaled[i][1])), 
-        (int(bboxes_scaled[i][2]), int(bboxes_scaled[i][3])), 
-        (255,0,0), 4)
+    for x in l_idx:
+      cv2.rectangle(image, r_list[x][0], r_list[x][1], (36,255,12), 2)
 
     return Image.fromarray(image[:,:,::-1])
 
