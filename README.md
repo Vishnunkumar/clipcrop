@@ -49,7 +49,6 @@ Solve captacha images using CLIP and Object detection models.
 
 ```python
 from clipcrop import clipcrop
-
 # second arguement is the text prompt eg:image of cars
 clipc = clipcrop.ClipCrop(image_path, "image of cars")
 #loading models, processors, feature extractors
