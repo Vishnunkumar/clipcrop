@@ -52,12 +52,10 @@ from clipcrop import clipcrop
 
 # second arguement is the text prompt eg:image of cars
 clipc = clipcrop.ClipCrop(image_path, "image of cars")
-
 #loading models, processors, feature extractors
 DFE, DM, CLIPM, CLIPP = clipc.load_models()
-
 #generally keep high threshold to avoid noises
-result = clipc.captcha(DFE, DM, CLIPM, CLIPP, th=0.99)
+result = clipc.captcha(CLIPM, CLIPP, 4)
 ```
 
 ## Clip Segmentation
