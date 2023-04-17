@@ -30,7 +30,7 @@ class ClipCrop():
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Get the text from the image
-    ret, thresh = cv2.threshold(img, 220, 255, cv2.THRESH_BINARY)
+    ret, thresh = cv2.threshold(gray, 220, 255, cv2.THRESH_BINARY)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,1))
     close = cv2.erode(thresh, kernel, iterations=2)
     invert = cv2.bitwise_not(close)
