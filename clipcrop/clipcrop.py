@@ -20,22 +20,27 @@ class ClipCrop():
 
     return DFE, DM, CLIPM, CLIPP
 
-  def auto_captcha(self, CLIPM, CLIPP, th=3):
+  def auto_captcha(self, CLIPM, CLIPP, th=3, tx ="default"):
     
     self.th = th
     self.CLIPM = CLIPM
     self.CLIPP = CLIPP
+    self.tx = tx
 
     image = cv2.imread(self.image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Get the text from the image
-    ret, thresh = cv2.threshold(gray, 220, 255, cv2.THRESH_BINARY)
+    ret, thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,1))
     close = cv2.erode(thresh, kernel, iterations=2)
     invert = cv2.bitwise_not(close)
     inf = pytesseract.image_to_string(invert)
-    txt = [x for x in inf.split('\n') if len(x) > 2][1]
+    
+    if len(inf.split('\n')) > 1:
+      txt = [x for x in inf.split('\n') if len(x) > 2][1]
+    else:
+      txt = self.tx
 
     # Process for captcha resolution
     blur = cv2.medianBlur(gray, 3)
@@ -62,7 +67,7 @@ class ClipCrop():
             r_list.append([(x, y), (x + w, y + h)])
             image_number += 1
 
-    inps = self.CLIPP(text = [txt], images=img_list , return_tensors="pt", padding=True)
+    inps = self.CLIPP(text = ["images with " + txt], images=img_list , return_tensors="pt", padding=True)
     outs = self.CLIPM(**inps)
     logits_per_image = outs.logits_per_text
     probs = logits_per_image.softmax(-1)
