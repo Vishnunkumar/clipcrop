@@ -141,7 +141,7 @@ class ClipSeg():
 
   def load_models(self):
     
-    segmentor = pipeline("image-segmentation")
+    segmentor = pipeline("image-segmentation", model="facebook/maskformer-swin-tiny-coco")
     model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32") 
 
