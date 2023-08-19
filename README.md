@@ -22,9 +22,9 @@ Extract sections of images from your image by using OpenAI's CLIP and Facebooks 
 
 ```python
 from clipcrop import clipcrop
-clipc = clipcrop.ClipCrop("/content/nm.jpg", "woman in white frock")
-DFE, DM, CLIPM, CLIPP = clipc.load_models()
-result = clipc.extract_image(DFE, DM, CLIPM, CLIPP)
+cc = clipcrop.ClipCrop("/content/sample.jpg")
+DFE, DM, CLIPM, CLIPP = cc.load_models()
+result = cc.extract_image(DFE, DM, CLIPM, CLIPP, "text content", num=2)
 # gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc while initiating the class
 ```
 <!-- 
@@ -50,11 +50,11 @@ Solve captacha images using CLIP and Object detection models.
 ```python
 from clipcrop import clipcrop
 # second arguement is the text prompt eg:image of cars
-clipc = clipcrop.ClipCrop(image_path, "image of cars")
+cc = clipcrop.ClipCrop(image_path)
 #loading models, processors, feature extractors
-DFE, DM, CLIPM, CLIPP = clipc.load_models()
+DFE, DM, CLIPM, CLIPP = cc.load_models()
 #generally keep high threshold to avoid noises
-result = clipc.captcha(CLIPM, CLIPP, 4)
+result = cc.captcha(CLIPM, CLIPP, 4)
 ```
 
 ## Clip Segmentation
