@@ -71,6 +71,13 @@ result = clipseg.segment_image(segmentor, clipmodel, clipprocessor)
 # gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
 
+### Remove Background
+```python
+from clipcrop import clipcrop
+clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
+result = clipseg.remove_background()
+```
+
 ### Other projects
 - [SnapCode : Extract code blocks from images mixed with normal text](https://github.com/Vishnunkumar/snapcode)
 - [HuggingFaceInference: Inference of different uses cases of finetued models](https://github.com/Vishnunkumar/huggingfaceinference)

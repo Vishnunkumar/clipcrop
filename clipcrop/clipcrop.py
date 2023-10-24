@@ -288,6 +288,11 @@ class ClipSeg():
     return seg_list
   
   def remove_background(self):
+    """
+    The function `remove_background` takes an input image, segments it into different regions, and
+    removes the background from the image using a trained model.
+    :return: an Image object named `response_Image`.
+    """
 
     segmentor = self.load_models()[0] 
     model = self.load_models()[1]
