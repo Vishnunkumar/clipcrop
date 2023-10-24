@@ -5,6 +5,7 @@ import pytesseract
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel, DetrFeatureExtractor, DetrForObjectDetection, pipeline
 
+# The ClipCrop class is used for cropping and clipping images.
 class ClipCrop():
 
   def __init__(self, image_path):
@@ -12,6 +13,11 @@ class ClipCrop():
     self.image_path = image_path
     
   def load_models(self):
+    """
+    The function "load_models" loads pre-trained models for object detection and image-text matching.
+    :return: four objects: DFE (DetrFeatureExtractor), DM (DetrForObjectDetection), CLIPM (CLIPModel),
+    and CLIPP (CLIPProcessor).
+    """
 
     DFE = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
     DM = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
@@ -21,6 +27,21 @@ class ClipCrop():
     return DFE, DM, CLIPM, CLIPP
 
   def auto_captcha(self, CLIPM, CLIPP, th=3, tx ="default"):
+    """
+    The `auto_captcha` function takes an image, extracts the text from it, processes it to resolve the
+    captcha, and returns the image with highlighted regions where the captcha is detected.
+    
+    :param CLIPM: CLIPM is an instance of the CLIP model. It is used for performing inference on the
+    images
+    :param CLIPP: CLIPP is an instance of the CLIPProcessor class, which is used for processing text
+    and images for the CLIP model. It is used to preprocess the text and images before passing them to
+    the CLIP model for inference
+    :param th: The parameter "th" stands for threshold and it determines the number of top predictions
+    to consider for drawing rectangles on the image, defaults to 3 (optional)
+    :param tx: The parameter `tx` is a default text that will be used if the captcha text cannot be
+    extracted from the image, defaults to default (optional)
+    :return: an image with rectangles drawn around the identified captcha regions.
+    """
     
     self.th = th
     self.CLIPM = CLIPM
@@ -79,6 +100,32 @@ class ClipCrop():
     return Image.fromarray(image[:,:,::-1])
 
   def extract_image(self, DFE, DM, CLIPM, CLIPP, text, num=3):
+    """
+    The function `extract_image` takes an image, applies object detection using the DFE and DM models,
+    extracts the bounding boxes and labels of the detected objects, crops the image based on the
+    bounding boxes, and then uses the CLIPM model to classify the cropped images based on the provided
+    text. The function returns a list of the top `num` cropped images along with their corresponding
+    scores.
+    
+    :param DFE: DFE stands for "Detection and Feature Extraction" model. It is used to detect objects
+    in an image and extract their features
+    :param DM: The parameter `DM` is a model that predicts bounding boxes and corresponding COCO
+    classes in an image
+    :param CLIPM: CLIPM is an instance of the CLIP model, which is used for text-to-image retrieval.
+    It takes in text and images as input and produces logits per text, indicating the similarity
+    between the text and each image
+    :param CLIPP: CLIPP is an instance of the CLIPProcessor class, which is used to preprocess text
+    and images for input to the CLIP model. It handles tasks such as tokenization, encoding, and
+    padding
+    :param text: The "text" parameter is a string that represents the input text for the CLIP model.
+    It is used to generate image-text embeddings and compare them to find the most relevant images
+    :param num: The `num` parameter specifies the number of images to be extracted and returned as
+    output, defaults to 3 (optional)
+    :return: a list of dictionaries, where each dictionary contains an image and its corresponding
+    score. The images are extracted from the input image based on predicted bounding boxes, and the
+    scores are calculated using a CLIP model. The list is sorted in descending order based on the
+    scores.
+    """
 
     self.DFE = DFE
     self.DM = DM
@@ -133,13 +180,29 @@ class ClipCrop():
     return fi
 
 
+# The ClipSeg class is a placeholder for a more detailed implementation.
 class ClipSeg():
+  
   def __init__(self, input_path, input_text):
+    """
+    The above function is a constructor that initializes the input_path and input_text attributes of
+    an object.
+    
+    :param input_path: The input_path parameter is a string that represents the path to a file. It is
+    used to specify the location of the file that contains the input text
+    :param input_text: The `input_text` parameter is a string that represents the text input for your
+    program. It could be any text that you want to process or manipulate in some way
+    """
     
     self.input_path = input_path
     self.input_text = input_text
 
   def load_models(self):
+    """
+    The function "load_models" loads and returns three models: an image segmentation model, a CLIP
+    model, and a CLIP processor.
+    :return: three objects: `segmentor`, `model`, and `processor`.
+    """
     
     segmentor = pipeline("image-segmentation", model="facebook/maskformer-swin-tiny-coco")
     model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
@@ -148,6 +211,17 @@ class ClipSeg():
     return segmentor, model, processor
 
   def unmask(self, img, segim):
+    """
+    The function takes an image and a segmentation mask as input, and returns the image with the masked
+    regions unmasked.
+    
+    :param img: The `img` parameter is the input image that you want to unmask. It can be a numpy array
+    or a PIL image
+    :param segim: The `segim` parameter is a binary image that represents a segmentation mask. It is
+    used to mask out certain regions of the input image (`img`). The regions that are masked out will
+    be set to black (0) in the output image
+    :return: a PIL (Python Imaging Library) image object.
+    """
 
     self.img = img
     self.segim = segim
@@ -159,6 +233,26 @@ class ClipSeg():
     return pil_mask
 
   def segment_image(self, segmentor, model, processor, num=None):
+    """
+    The `segment_image` function takes an input image, segments it using a given segmentor, processes
+    the segments using a given model and processor, and returns a list of segmented images along with
+    their scores.
+    
+    :param segmentor: The `segmentor` parameter is a function that takes an input image and returns a
+    list of segments. Each segment is represented as a dictionary with keys "mask" and "score". The
+    "mask" value is a binary mask indicating the pixels belonging to the segment, and the "score"
+    value
+    :param model: The `model` parameter refers to a machine learning model that is used for image
+    segmentation. It takes in an image as input and outputs a segmented image, where different regions
+    of the image are assigned different labels or classes
+    :param processor: The `processor` parameter is an object that is used to preprocess the input text
+    and images before feeding them into the model. It is responsible for tasks such as tokenization,
+    padding, and converting the input into a format that the model can understand
+    :param num: The `num` parameter specifies the number of segments to be returned. If `num` is not
+    provided, it defaults to 1, meaning only the top-scoring segment will be returned
+    :return: a list of dictionaries, where each dictionary contains an "image" key with the segmented
+    image and a "score" key with the corresponding score for that segment.
+    """
     
     self.segmentor = segmentor 
     self.model = model 
@@ -192,3 +286,29 @@ class ClipSeg():
       seg_list.append(seg_dict)
     
     return seg_list
+  
+  def remove_background(self):
+
+    segmentor = self.load_models()[0] 
+    model = self.load_models()[1]
+    processor = self.load_models()[2]
+
+    segments = segmentor(self.input_path)
+    img = Image.open(self.input_path)
+    images_list = [self.unmask(img, x['mask']) for x in segments]
+    scores = [x['score'] for x in segments]
+    inputs = processor(text = [self.input_text], images=images_list , return_tensors="pt", padding=True)
+    outputs = model(**inputs)
+    logits_per_image = outputs.logits_per_text
+    probs = logits_per_image.softmax(-1).detach().numpy()
+    res_list = np.argsort(probs[0])[::-1]
+
+    for x in res_list[:1]:
+      res_im = images_list[x]
+      res_cv = np.array(res_im)
+      nz = np.sum(res_cv, axis=-1) > 0
+      nz = np.uint8(nz * 255)
+      res = np.dstack((res_cv, nz))
+      response_Image = Image.fromarray(res)  
+
+    return response_Image
