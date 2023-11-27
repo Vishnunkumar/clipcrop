@@ -143,7 +143,7 @@ class ClipCrop():
     bboxes = outputs.pred_boxes
     probas = outputs.logits.softmax(-1)[0, :, :-1] #removing no class as detr maps 
 
-    keep = probas.max(-1).values > 0.95
+    keep = probas.max(-1).values > 0.6
     outs = self.DFE.post_process(outputs, torch.tensor(image.shape[:2]).unsqueeze(0))
     bboxes_scaled = outs[0]['boxes'][keep].detach().numpy()
     labels = outs[0]['labels'][keep].detach().numpy()
