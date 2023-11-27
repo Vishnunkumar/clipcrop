@@ -3,7 +3,7 @@ import torch
 import cv2
 import pytesseract
 from PIL import Image
-from transformers import CLIPProcessor, CLIPModel, DetrFeatureExtractor, DetrForObjectDetection, pipeline
+from transformers import CLIPProcessor, CLIPModel, pipeline, YolosImageProcessor, YolosForObjectDetection
 
 # The ClipCrop class is used for cropping and clipping images.
 class ClipCrop():
