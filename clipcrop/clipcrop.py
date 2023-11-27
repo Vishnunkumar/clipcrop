@@ -15,12 +15,12 @@ class ClipCrop():
   def load_models(self):
     """
     The function "load_models" loads pre-trained models for object detection and image-text matching.
-    :return: four objects: DFE (DetrFeatureExtractor), DM (DetrForObjectDetection), CLIPM (CLIPModel),
+    :return four objects: DFE (DetectionFeatureExtractor), DM (DetectionModelObjectDetection), CLIPM (CLIPModel),
     and CLIPP (CLIPProcessor).
     """
 
-    DFE = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-50')
-    DM = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-50')
+    DFE = YolosImageProcessor.from_pretrained("hustvl/yolos-small")
+    DM = YolosForObjectDetection.from_pretrained('hustvl/yolos-small')
     CLIPM = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
     CLIPP = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
