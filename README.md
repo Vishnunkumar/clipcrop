@@ -38,7 +38,7 @@ result = cc.extract_image(DFE, DM, CLIPM, CLIPP, "text content", num=2)
 </p> -->
 
 ### Captcha
-Solve captacha images using CLIP and Object detection models.
+Solve captacha images using CLIP and Object detection models. Ensure Tesseract is installed and executable in your path
 
 ```python
 from clipcrop import clipcrop
@@ -47,7 +47,7 @@ cc = clipcrop.ClipCrop(image_path)
 #loading models, processors, feature extractors
 DFE, DM, CLIPM, CLIPP = cc.load_models()
 #generally keep high threshold to avoid noises
-result = cc.captcha(CLIPM, CLIPP, 4)
+result = cc.auto_captcha(CLIPM, CLIPP, 4)
 ```
 
 ## Clip Segmentation
