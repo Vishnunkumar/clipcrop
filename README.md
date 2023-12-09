@@ -11,7 +11,7 @@ pip install clipcrop
 
 Extract sections of images from your image by using OpenAI's CLIP and YoloSmall implemented on HuggingFace Transformers 
 
-### Implementation
+### Extraction
 
 ```python
 from clipcrop import clipcrop
@@ -59,7 +59,7 @@ result = cc.auto_captcha(CLIPM, CLIPP, 4)
 
 Segment out images using Detr Panoptic segmentation pipeline and leverage CLIP models to derive the most probable one for your query
 
-### Implementation
+### Extraction
 
 ```python
 
