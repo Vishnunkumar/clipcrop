@@ -21,7 +21,9 @@ cc = clipcrop.ClipCrop("/content/sample.jpg")
 DFE, DM, CLIPM, CLIPP = cc.load_models()
 
 result = cc.extract_image(DFE, DM, CLIPM, CLIPP, "text content", num=2)
+
 ```
+
 <!-- 
 ### Result
 
@@ -50,6 +52,7 @@ cc = clipcrop.ClipCrop(image_path)
 DFE, DM, CLIPM, CLIPP = cc.load_models()
 
 result = cc.auto_captcha(CLIPM, CLIPP, 4)
+
 ```
 
 ## Clip Segmentation
@@ -59,6 +62,7 @@ Segment out images using Detr Panoptic segmentation pipeline and leverage CLIP m
 ### Implementation
 
 ```python
+
 from clipcrop import clipcrop
 
 clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
@@ -66,15 +70,18 @@ clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
 segmentor, clipmodel, clipprocessor = clipseg.load_models()
 
 result = clipseg.segment_image(segmentor, clipmodel, clipprocessor)
+
 ```
 
 ### Remove Background
 ```python
+
 from clipcrop import clipcrop
 
 clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
 
 result = clipseg.remove_background()
+
 ```
 
 ### Other projects
