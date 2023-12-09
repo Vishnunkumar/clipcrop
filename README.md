@@ -15,10 +15,12 @@ Extract sections of images from your image by using OpenAI's CLIP and YoloSmall 
 
 ```python
 from clipcrop import clipcrop
+
 cc = clipcrop.ClipCrop("/content/sample.jpg")
+
 DFE, DM, CLIPM, CLIPP = cc.load_models()
+
 result = cc.extract_image(DFE, DM, CLIPM, CLIPP, "text content", num=2)
-# gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc while initiating the class
 ```
 <!-- 
 ### Result
@@ -42,11 +44,11 @@ Solve captacha images using CLIP and Object detection models. Ensure Tesseract i
 
 ```python
 from clipcrop import clipcrop
-# second arguement is the text prompt eg:image of cars
+
 cc = clipcrop.ClipCrop(image_path)
-#loading models, processors, feature extractors
+
 DFE, DM, CLIPM, CLIPP = cc.load_models()
-#generally keep high threshold to avoid noises
+
 result = cc.auto_captcha(CLIPM, CLIPP, 4)
 ```
 
@@ -58,16 +60,20 @@ Segment out images using Detr Panoptic segmentation pipeline and leverage CLIP m
 
 ```python
 from clipcrop import clipcrop
+
 clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
+
 segmentor, clipmodel, clipprocessor = clipseg.load_models()
+
 result = clipseg.segment_image(segmentor, clipmodel, clipprocessor)
-# gives a list of dicitonary of top images and its relative similarity score and you can override this by setting num = 5  to get top 5 etc
 ```
 
 ### Remove Background
 ```python
 from clipcrop import clipcrop
+
 clipseg = clipcrop.ClipSeg("/content/input.png", "black colored car")
+
 result = clipseg.remove_background()
 ```
 
