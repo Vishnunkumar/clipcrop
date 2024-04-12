@@ -87,3 +87,6 @@ result = clipseg.remove_background()
 ### Other projects
 - [SnapCode : Extract code blocks from images mixed with normal text](https://github.com/Vishnunkumar/snapcode)
 - [HuggingFaceInference: Inference of different uses cases of finetued models](https://github.com/Vishnunkumar/huggingfaceinference)
+
+### Contact
+- Feel free to contact me on "nkumarvishnu25@gmail.com"
