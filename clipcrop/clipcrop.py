@@ -3,7 +3,7 @@ import numpy as np
 import pytesseract
 import torch
 from PIL import Image
-from components import ClipCropper, ClipSegmentor
+from .components import ClipCropper, ClipSegmentor
 
 
 # The ClipCrop class is used for cropping and clipping images.
@@ -135,7 +135,7 @@ class ClipCrop:
 
 
 # The ClipSeg class is a placeholder for a more detailed implementation.
-class ClipSeg():
+class ClipSeg:
 
     def __init__(self, input_path, input_text):
 
@@ -215,4 +215,7 @@ class ClipSeg():
             res = np.dstack((res_cv, nz))
             response_image = Image.fromarray(res)
 
-        return response_image
+        try:
+            return response_image
+        except:
+            raise ValueError("response image is null")
