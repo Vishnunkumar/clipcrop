@@ -16,7 +16,7 @@ requirements = [
 
 setuptools.setup(
     name="clipcrop",
-    version="2.4.7",
+    version="2.4.8",
     author="Vishnu Nandakumar",
     author_email="nkumarvishnu25@gmail.com",
     description="Extract sections from your image by using OpenAI CLIP and Facebooks Detr implemented on HuggingFace Transformers",
